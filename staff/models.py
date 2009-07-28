@@ -40,7 +40,7 @@ class StaffMember(models.Model):
         Makes sure the User field is in sync with the values here
         """
         theslug = slugify('%s %s' % (self.first_name, self.last_name)
-        if self.slug != theslug)
+        if self.slug != theslug):
             self.slug = theslug
         super(StaffMember, self).save(*args, **kwargs)
         must_save_user = False
