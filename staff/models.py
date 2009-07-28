@@ -91,5 +91,5 @@ def update_staff_member(sender, instance, created):
             staffmember.is_active = False
             staffmemeber.save()
 
-from django.core.signals import post_save
+from django.db.models.signals import post_save
 post_save.connect(update_staff_member, sender=User)
