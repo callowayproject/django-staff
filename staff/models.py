@@ -57,7 +57,7 @@ class StaffMember(models.Model):
         if must_save_user:
             self.user.save()
 
-def update_staff_member(sender, instance, created):
+def update_staff_member(sender, instance, created, **kwargs):
     from django.contrib.sites.models import Site
     
     if created and instance.is_staff:
