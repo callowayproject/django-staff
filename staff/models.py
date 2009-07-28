@@ -58,8 +58,9 @@ class StaffMember(models.Model):
             self.user.save()
 
 def update_staff_member(sender, instance, created, **kwargs):
-    from django.contrib.sites.models import Site
-    
+    """
+    Update the Staff Member instance when a User object is changed.
+    """
     if created and instance.is_staff:
         staffmember = instance.staffmember_set.create(
             first_name=instance.first_name, 
