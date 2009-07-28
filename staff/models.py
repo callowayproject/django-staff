@@ -1,8 +1,9 @@
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
 from django.db.models import permalink
+from django.utils.translation import ugettext_lazy as _
 from django.contrib.localflavor.us.models import PhoneNumberField
 from django.contrib.auth.models import User
+from django.contrib.sites.models import Site
 from django.template.defaultfilters import slugify
 
 class StaffMember(models.Model):
@@ -21,7 +22,7 @@ class StaffMember(models.Model):
     is_active = models.BooleanField(_('is a current employee'), default=True)
     phone = PhoneNumberField(_('Phone Number'), blank=True)
     photo = models.FileField(_('Photo'), blank=True, upload_to='img/staff/%Y')
-    sites = models.ManyToManyField(_('Sites'), Site)
+    sites = models.ManyToManyField(Site)
     
     class Meta:
         ordering = ('last_name', 'first_name')
@@ -39,7 +40,7 @@ class StaffMember(models.Model):
         """
         Makes sure the User field is in sync with the values here
         """
-        theslug = slugify('%s %s' % (self.first_name, self.last_name)
+        theslug = slugify('%s %s' % (self.first_name, self.last_name))
         if self.slug != theslug:
             self.slug = theslug
         super(StaffMember, self).save(*args, **kwargs)
