@@ -5,6 +5,15 @@ from django.contrib.localflavor.us.models import PhoneNumberField
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 
+
+class StaffMemberManager(models.Model):
+    """
+    A Manager for StaffMembers.
+    """
+    def active():
+        return super(StaffMemberManager, self).get_query_set().filter(is_active=True)
+
+
 class StaffMember(models.Model):
     user = models.ForeignKey(User)
     first_name = models.CharField(_('First Name'),
@@ -22,6 +31,8 @@ class StaffMember(models.Model):
     phone = PhoneNumberField(_('Phone Number'), blank=True)
     photo = models.FileField(_('Photo'), blank=True, upload_to='img/staff/%Y')
     sites = models.ManyToManyField(_('Sites'), Site)
+    
+    objects = StaffMemberManager()
     
     class Meta:
         ordering = ('last_name', 'first_name')

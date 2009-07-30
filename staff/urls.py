@@ -2,8 +2,9 @@ from django.conf.urls.defaults import *
 from models import StaffMember
 
 staffmember_info = {'model': StaffMember}
+queryset = StaffMember.objects.active()
 
-urlpatterns = patterns('staff.views',
+urlpatterns = patterns('',
     url(r'^$',
         'index', 
         name='staff_index'),
@@ -11,7 +12,8 @@ urlpatterns = patterns('staff.views',
         'userinfo_ajax',
         name='staff_userinfo_ajax'),
     url(r'^(?P<slug>[^/]+)/$',
-        'bio_page', 
+        'django.views.generic.list_detail.object_detail', 
+        {'queryset': queryset, 'template': 'staff/staff_detail.html',},
         name='staff_staffmember_detail'),
     url(r'^(?P<slug>[^/]+)/contact/$',
         'contact',
@@ -23,5 +25,5 @@ urlpatterns = patterns('staff.views',
         name='staff_staffmember_contact_done'),
     url(r'^(?P<slug>[^/]+)/stories/$',
         'story_archive', 
-        name='ellington_staff_staffer_stories'),
+        name='staff_staff_staffer_stories'),
 )
