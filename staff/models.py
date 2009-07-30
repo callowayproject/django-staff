@@ -1,8 +1,9 @@
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
 from django.db.models import permalink
+from django.utils.translation import ugettext_lazy as _
 from django.contrib.localflavor.us.models import PhoneNumberField
 from django.contrib.auth.models import User
+from django.contrib.sites.models import Site
 from django.template.defaultfilters import slugify
 
 
@@ -30,7 +31,7 @@ class StaffMember(models.Model):
     is_active = models.BooleanField(_('is a current employee'), default=True)
     phone = PhoneNumberField(_('Phone Number'), blank=True)
     photo = models.FileField(_('Photo'), blank=True, upload_to='img/staff/%Y')
-    sites = models.ManyToManyField(_('Sites'), Site)
+    sites = models.ManyToManyField(Site)
     
     objects = StaffMemberManager()
     
@@ -50,8 +51,8 @@ class StaffMember(models.Model):
         """
         Makes sure the User field is in sync with the values here
         """
-        theslug = slugify('%s %s' % (self.first_name, self.last_name)
-        if self.slug != theslug)
+        theslug = slugify('%s %s' % (self.first_name, self.last_name))
+        if self.slug != theslug:
             self.slug = theslug
         super(StaffMember, self).save(*args, **kwargs)
         must_save_user = False
@@ -67,9 +68,10 @@ class StaffMember(models.Model):
         if must_save_user:
             self.user.save()
 
-def update_staff_member(sender, instance, created):
-    from django.contrib.sites.models import Site
-    
+def update_staff_member(sender, instance, created, **kwargs):
+    """
+    Update the Staff Member instance when a User object is changed.
+    """
     if created and instance.is_staff:
         staffmember = instance.staffmember_set.create(
             first_name=instance.first_name, 
@@ -101,5 +103,5 @@ def update_staff_member(sender, instance, created):
             staffmember.is_active = False
             staffmemeber.save()
 
-from django.core.signals import post_save
+from django.db.models.signals import post_save
 post_save.connect(update_staff_member, sender=User)
