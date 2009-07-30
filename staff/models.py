@@ -83,20 +83,22 @@ def update_staff_member(sender, instance, created, **kwargs):
             staffmember.sites.add(site)
     elif instance.is_staff:
         must_save = False
-        staffmember = instance.staffmember_set.all()[0]
-        if instance.first_name != staffmember.first_name:
-            staffmember.first_name = instance.first_name
-            staffmember.slug = slugify('%s %s' % (instance.first_name, instance.last_name)),
-            must_save = True
-        if instance.last_name != staffmember.last_name:
-            staffmember.last_name = instance.last_name
-            staffmember.slug = slugify('%s %s' % (instance.first_name, instance.last_name)),
-            must_save = True
-        if instance.email != staffmember.email:
-            staffmember.email = instance.email
-            must_save = True
-        if must_save:
-            staffmember.save()
+        staffmembers = instance.staffmember_set.all()
+        if len(staffmembers):
+            staffmember = staffmembers[0]
+            if instance.first_name != staffmember.first_name:
+                staffmember.first_name = instance.first_name
+                staffmember.slug = slugify('%s %s' % (instance.first_name, instance.last_name)),
+                must_save = True
+            if instance.last_name != staffmember.last_name:
+                staffmember.last_name = instance.last_name
+                staffmember.slug = slugify('%s %s' % (instance.first_name, instance.last_name)),
+                must_save = True
+            if instance.email != staffmember.email:
+                staffmember.email = instance.email
+                must_save = True
+            if must_save:
+                staffmember.save()
     elif not instance.is_staff:
         # Make sure we deactiviate any staff members associated with this user
         for staffmember in instance.staffmember_set.all():

@@ -4,7 +4,7 @@ from django.contrib import admin
 class StaffMemberAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {'fields': ('user',)}),
-        ('Personal Info', {'fields': ('first_name', 'last_name', 'bio', 'photo', 'show_photo', 'is_active')}),
+        ('Personal Info', {'fields': ('first_name', 'last_name', 'slug', 'bio', 'photo', 'is_active')}),
         ('Contact info', {'fields': ('email', 'phone')}),
         ('Responsibilities', {'fields': ('sites',)}),
     )
