@@ -7,11 +7,11 @@ from django.contrib.sites.models import Site
 from django.template.defaultfilters import slugify
 
 
-class StaffMemberManager(models.Model):
+class StaffMemberManager(models.Manager):
     """
     A Manager for StaffMembers.
     """
-    def active():
+    def active(self):
         return super(StaffMemberManager, self).get_query_set().filter(is_active=True)
 
 
@@ -66,6 +66,7 @@ class StaffMember(models.Model):
             self.user.email = self.email
             must_save_user = True
         if must_save_user:
+            self.user.is_staff = True
             self.user.save()
 
 def update_staff_member(sender, instance, created, **kwargs):
