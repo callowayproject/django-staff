@@ -27,6 +27,6 @@ urlpatterns = patterns('staff.views',
 urlpatterns += patterns('',
     url(r'^(?P<slug>[^/]+)/$',
         'django.views.generic.list_detail.object_detail', 
-        {'queryset': queryset, 'template_name': 'staff/staff_detail.html',},
+        {'queryset': queryset, 'template_name': 'staffmembers/details.html',},
         name='staff_staffmember_detail'),
 )
