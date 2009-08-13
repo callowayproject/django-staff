@@ -73,8 +73,8 @@ def update_staff_member(sender, instance, created, **kwargs):
     """
     Update the Staff Member instance when a User object is changed.
     """
-    if created and instance.is_staff:
-        staffmember = instance.staffmember_set.create(
+    if created and instance.is_staff and not instance.staffmember_set.count():
+        staffmember,_ = instance.staffmember_set.get_or_create(
             first_name=instance.first_name, 
             last_name=instance.last_name,
             slug=slugify('%s %s' % (instance.first_name, instance.last_name)),
