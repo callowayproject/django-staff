@@ -16,7 +16,7 @@ class StaffMemberManager(models.Manager):
 
 
 class StaffMember(models.Model):
-    user = models.ForeignKey(User, limit_choices_to = {'is_staff': False, 'is_active'=True})
+    user = models.ForeignKey(User, limit_choices_to = {'is_staff': False, 'is_active':True})
     first_name = models.CharField(_('First Name'),
         max_length=150,
         help_text=_('This field is linked to the User account and will change its value.'))
