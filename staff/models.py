@@ -104,7 +104,7 @@ def update_staff_member(sender, instance, created, **kwargs):
         # Make sure we deactiviate any staff members associated with this user
         for staffmember in instance.staffmember_set.all():
             staffmember.is_active = False
-            staffmemeber.save()
+            staffmember.save()
 
 from django.db.models.signals import post_save
 post_save.connect(update_staff_member, sender=User)
