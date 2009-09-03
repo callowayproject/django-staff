@@ -16,7 +16,7 @@ class StaffMemberManager(models.Manager):
 
 
 class StaffMember(models.Model):
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, limit_choices_to = {'is_staff': False, 'is_active':True})
     first_name = models.CharField(_('First Name'),
         max_length=150,
         help_text=_('This field is linked to the User account and will change its value.'))
@@ -52,6 +52,8 @@ class StaffMember(models.Model):
         Makes sure the User field is in sync with the values here
         """
         theslug = slugify('%s %s' % (self.first_name, self.last_name))
+        while StaffMember.objects.filter(slug=theslug).count():
+            theslug = "%s_" % theslug
         if self.slug != theslug:
             self.slug = theslug
         super(StaffMember, self).save(*args, **kwargs)
