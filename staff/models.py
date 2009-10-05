@@ -53,7 +53,7 @@ class StaffMember(models.Model):
         Makes sure the User field is in sync with the values here
         """
         theslug = slugify('%s %s' % (self.first_name, self.last_name))
-        while StaffMember.objects.filter(slug=theslug).count():
+        while StaffMember.objects.filter(slug=theslug,id__ne=self.id).count():
             theslug = "%s_" % theslug
         if self.slug != theslug:
             self.slug = theslug
