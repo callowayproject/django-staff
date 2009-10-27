@@ -69,8 +69,11 @@ class StaffMember(models.Model):
             self.user.email = self.email
             must_save_user = True
         if must_save_user:
+            post_save.disconnect(update_staff_member, sender=User)
             self.user.is_staff = True
             self.user.save()
+            post_save.connect(update_staff_member, sender=User)
+
 
 def update_staff_member(sender, instance, created, **kwargs):
     """
