@@ -1,7 +1,9 @@
 from models import StaffMember
 from django.contrib import admin
+from forms import StaffMemberForm
 
 class StaffMemberAdmin(admin.ModelAdmin):
+    form = StaffMemberForm
     fieldsets = (
         (None, {'fields': ('user',)}),
         ('Personal Info', {'fields': ('first_name', 'last_name', 'slug', 'bio', 'photo', 'is_active')}),
