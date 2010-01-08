@@ -1,10 +1,17 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
-from models import StaffMember
-from tinymce.widgets import TinyMCE
+from django.conf import settings
 
+from models import StaffMember
+
+if 'tinymce' in settings.INSTALLED_APPS:
+    from tinymce.widgets import TinyMCE
+    widget = TinyMCE(attrs={'cols': 80, 'rows': 30})
+else:
+    widget = forms.Textarea()
+    
 class StaffMemberForm(forms.ModelForm):
-    bio = forms.CharField(widget=TinyMCE(attrs={'cols': 80, 'rows': 30}))
+    bio = forms.CharField(widget=widget)
     class Meta:
         model = StaffMember
         
