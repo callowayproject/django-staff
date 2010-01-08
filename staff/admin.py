@@ -10,6 +10,7 @@ class StaffMemberAdmin(admin.ModelAdmin):
         ('Contact info', {'fields': ('email', 'phone')}),
         ('Responsibilities', {'fields': ('sites',)}),
     )
+    raw_id_fields = ('user',)
     list_display = ('first_name', 'last_name', 'is_active')
     list_filter = ('is_active',)
     search_fields = ('first_name', 'last_name', 'slug')
