@@ -55,7 +55,7 @@ class StaffMember(models.Model):
         is_new = False
         if self.id is None:
             is_new = True
-            theslug = self.slug or slugify('%s %s' % (self.first_name, self.last_name))
+        theslug = self.slug or slugify('%s %s' % (self.first_name, self.last_name))
         while StaffMember.objects.filter(slug=theslug).exclude(id=self.id).count():
             theslug = "%s_" % theslug
         if self.slug != theslug:
