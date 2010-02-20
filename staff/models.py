@@ -41,9 +41,10 @@ class StaffMember(models.Model):
 
     def __unicode__(self):
         return u"%s %s" % (self.first_name, self.last_name)
-
+   
+    @models.permalink
     def get_absolute_url(self):
-        return reverse('staff_staffmember_detail', args=[self.slug])
+        return ('staff_staffmember_detail', [self.slug])
 
     def get_full_name(self):
         return u'%s %s' % (self.first_name.strip(), self.last_name.strip())
