@@ -16,7 +16,7 @@ class StaffMemberManager(models.Manager):
 
 
 class StaffMember(models.Model):
-    user = models.ForeignKey(User, limit_choices_to = {'is_active':True}, 
+    user = models.ForeignKey(User, limit_choices_to = {'is_active':True},
         unique=True, verbose_name=_('User'))
     first_name = models.CharField(_('First Name'),
         max_length=150,
@@ -25,7 +25,7 @@ class StaffMember(models.Model):
         max_length=150,
         help_text=_('This field is linked to the User account and will change its value.'))
     slug = models.SlugField(unique=True)
-    email = models.EmailField(_('e-mail'), 
+    email = models.EmailField(_('e-mail'),
         blank=True,
         help_text=_('This field is linked to the User account and will change its value.'))
     bio = models.TextField(_('Biography'), blank=True)
@@ -33,9 +33,9 @@ class StaffMember(models.Model):
     phone = PhoneNumberField(_('Phone Number'), blank=True)
     photo = models.FileField(_('Photo'), blank=True, upload_to='img/staff/%Y')
     sites = models.ManyToManyField(Site)
-    
+
     objects = StaffMemberManager()
-    
+
     class Meta:
         ordering = ('last_name', 'first_name')
 
@@ -47,7 +47,7 @@ class StaffMember(models.Model):
 
     def get_full_name(self):
         return u'%s %s' % (self.first_name.strip(), self.last_name.strip())
-    
+
     def save(self, force_insert=False, force_update=False):
         """
         Makes sure the User field is in sync with the values here
@@ -61,7 +61,7 @@ class StaffMember(models.Model):
         if self.slug != theslug:
             self.slug = theslug
         super(StaffMember, self).save(force_insert, force_update)
-        
+
         must_save_user = False
         if self.first_name != self.user.first_name:
             self.user.first_name = self.first_name
@@ -86,13 +86,13 @@ def update_staff_member(sender, instance, created, **kwargs):
     if created and instance.is_staff and not instance.staffmember_set.count():
         staffmember = StaffMember(
             user=instance,
-            first_name=instance.first_name, 
+            first_name=instance.first_name,
             last_name=instance.last_name,
             #slug=slugify('%s %s' % (instance.first_name, instance.last_name)),
             email=instance.email,
             is_active=True)
         staffmember.save()
-        
+
         for site in Site.objects.all():
             staffmember.sites.add(site)
     elif instance.is_staff:
@@ -114,7 +114,7 @@ def update_staff_member(sender, instance, created, **kwargs):
             if must_save:
                 staffmember.save()
     elif not instance.is_staff:
-        # Make sure we deactiviate any staff members associated with this user
+        # Make sure we deactivate any staff members associated with this user
         for staffmember in instance.staffmember_set.all():
             staffmember.is_active = False
             staffmember.save()
