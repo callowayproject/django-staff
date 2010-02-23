@@ -14,6 +14,8 @@ class StaffMemberForm(forms.ModelForm):
     bio = forms.CharField(widget=widget)
     class Meta:
         model = StaffMember
+        exclude = ('slug','first_name','last_name')
+
 
 class ContactForm(forms.Form):
     name = forms.CharField(label=_('Your Name'))

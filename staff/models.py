@@ -20,14 +20,19 @@ class StaffMember(models.Model):
         unique=True, verbose_name=_('User'))
     first_name = models.CharField(_('First Name'),
         max_length=150,
-        help_text=_('This field is linked to the User account and will change its value.'))
+        help_text=_('This field is linked to the User account and will change its value.'),
+        blank=True,
+        null=True)
     last_name = models.CharField(_('Last Name'),
         max_length=150,
-        help_text=_('This field is linked to the User account and will change its value.'))
+        help_text=_('This field is linked to the User account and will change its value.'),
+        blank=True,
+        null=True)
     slug = models.SlugField(unique=True)
     email = models.EmailField(_('e-mail'),
         blank=True,
-        help_text=_('This field is linked to the User account and will change its value.'))
+        help_text=_('This field is linked to the User account and will change its value.'),
+        null=True)
     bio = models.TextField(_('Biography'), blank=True)
     is_active = models.BooleanField(_('is a current employee'), default=True)
     phone = PhoneNumberField(_('Phone Number'), blank=True)
@@ -51,11 +56,11 @@ class StaffMember(models.Model):
 
     def save(self, force_insert=False, force_update=False):
         """
-        Makes sure the User field is in sync with the values here
+        Makes sure we are in sync with the User field
         """
-        is_new = False
-        if self.id is None:
-            is_new = True
+        self.first_name = self.user.first_name
+        self.last_name = self.user.last_name
+        self.email = self.user.email
         theslug = self.slug or slugify('%s %s' % (self.first_name, self.last_name))
         while StaffMember.objects.filter(slug=theslug).exclude(id=self.id).count():
             theslug = "%s_" % theslug
@@ -63,21 +68,6 @@ class StaffMember(models.Model):
             self.slug = theslug
         super(StaffMember, self).save(force_insert, force_update)
 
-        must_save_user = False
-        if self.first_name != self.user.first_name:
-            self.user.first_name = self.first_name
-            must_save_user = True
-        if self.last_name != self.user.last_name:
-            self.user.last_name = self.last_name
-            must_save_user = True
-        if self.email != self.user.email:
-            self.user.email = self.email
-            must_save_user = True
-        if must_save_user and not is_new:
-            post_save.disconnect(update_staff_member, sender=User)
-            self.user.is_staff = True
-            self.user.save()
-            post_save.connect(update_staff_member, sender=User)
 
 
 def update_staff_member(sender, instance, created, **kwargs):
@@ -122,5 +112,5 @@ def update_staff_member(sender, instance, created, **kwargs):
             from django.db import transaction
             transaction.commit_unless_managed()
 
-from django.db.models.signals import post_save
-post_save.connect(update_staff_member, sender=User)
+# from django.db.models.signals import post_save
+# post_save.connect(update_staff_member, sender=User)
