@@ -1,4 +1,0 @@
-Create javascript to query for first, last and email when a user id is selected in admin
-DONE------create a view to handle the ajax above
-Add the javascript to the media piece of the admin form
-DONE------write the views listed in urls.py
