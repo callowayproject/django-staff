@@ -62,13 +62,14 @@ class StaffMember(models.Model):
         self.last_name = self.user.last_name
         self.email = self.user.email
         theslug = self.slug or slugify('%s %s' % (self.first_name, self.last_name))
+        if not theslug.strip():
+            theslug = str(self.user.pk)
         while StaffMember.objects.filter(slug=theslug).exclude(id=self.id).count():
             theslug = "%s_" % theslug
         if self.slug != theslug:
             self.slug = theslug
+        self.slug = self.slug[:50]
         super(StaffMember, self).save(force_insert, force_update)
-
-
 
 def update_staff_member(sender, instance, created, **kwargs):
     """
