@@ -1,10 +1,18 @@
-#TODO setup signal to automatically add a staff user
-# when a django.contrib.auth.models.User is created
-# with is_staff=True, and also deactivate a staff
-# member when is_staff is set to False
-from django.conf import settings
-from django.db.models.signals import post_save
-from django.contrib.auth.models import User
-from django.template.defaultfilters import slugify
-from django.contrib.sites.models import Site
-from staff.models import StaffMember
+__version_info__ = {
+    'major': 0,
+    'minor': 3,
+    'micro': 0,
+    'releaselevel': 'final',
+    'serial': 0
+}
+
+def get_version():
+    vers = ["%(major)i.%(minor)i" % __version_info__, ]
+
+    if __version_info__['micro']:
+        vers.append(".%(micro)i" % __version_info__)
+    if __version_info__['releaselevel'] != 'final':
+        vers.append('%(releaselevel)s%(serial)i' % __version_info__)
+    return ''.join(vers)
+
+__version__ = get_version()

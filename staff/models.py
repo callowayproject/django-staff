@@ -54,14 +54,15 @@ class StaffMember(models.Model):
     def get_full_name(self):
         return u'%s %s' % (self.first_name.strip(), self.last_name.strip())
 
-    def save(self, force_insert=False, force_update=False):
+    def save(self, force_insert=False, force_update=False, *args, **kwargs):
         """
         Makes sure we are in sync with the User field
         """
         self.first_name = self.user.first_name
         self.last_name = self.user.last_name
         self.email = self.user.email
-        theslug = self.slug or slugify('%s %s' % (self.first_name, self.last_name))
+        full_name = '%s %s' % (self.first_name, self.last_name)
+        theslug = slugify(full_name)
         if not theslug.strip():
             theslug = str(self.user.pk)
         while StaffMember.objects.filter(slug=theslug).exclude(id=self.id).count():
@@ -69,22 +70,18 @@ class StaffMember(models.Model):
         if self.slug != theslug:
             self.slug = theslug
         self.slug = self.slug[:50]
-        super(StaffMember, self).save(force_insert, force_update)
+        super(StaffMember, self).save(force_insert, force_update, *args, **kwargs)
 
 def update_staff_member(sender, instance, created, **kwargs):
     """
     Update the Staff Member instance when a User object is changed.
     """
-    if created and instance.is_staff and not instance.staffmember_set.count():
+    if instance.is_staff and not instance.staffmember_set.count():
         staffmember = StaffMember(
             user=instance,
-            first_name=instance.first_name,
-            last_name=instance.last_name,
-            #slug=slugify('%s %s' % (instance.first_name, instance.last_name)),
-            email=instance.email,
             is_active=True)
         staffmember.save()
-
+        
         for site in Site.objects.all():
             staffmember.sites.add(site)
     elif instance.is_staff:
@@ -110,8 +107,8 @@ def update_staff_member(sender, instance, created, **kwargs):
         for staffmember in instance.staffmember_set.all():
             staffmember.is_active = False
             staffmember.save()
-            from django.db import transaction
-            transaction.commit_unless_managed()
+    from django.db import transaction
+    transaction.commit_unless_managed()
 
-# from django.db.models.signals import post_save
-# post_save.connect(update_staff_member, sender=User)
+from django.db.models.signals import post_save
+post_save.connect(update_staff_member, sender=User)
