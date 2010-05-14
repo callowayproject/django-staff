@@ -1,10 +1,12 @@
 from django.db import models
-from django.db.models import permalink
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.localflavor.us.models import PhoneNumberField
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 from django.template.defaultfilters import slugify
+from django.conf import settings
+
+DEFAULT_STORAGE = getattr(settings, "STAFF_PHOTO_STORAGE", settings.DEFAULT_FILE_STORAGE)
 
 
 class StaffMemberManager(models.Manager):
@@ -36,7 +38,7 @@ class StaffMember(models.Model):
     bio = models.TextField(_('Biography'), blank=True)
     is_active = models.BooleanField(_('is a current employee'), default=True)
     phone = PhoneNumberField(_('Phone Number'), blank=True)
-    photo = models.FileField(_('Photo'), blank=True, upload_to='img/staff/%Y')
+    photo = models.FileField(_('Photo'), blank=True, upload_to='img/staff/%Y', storage=DEFAULT_STORAGE())
     sites = models.ManyToManyField(Site)
 
     objects = StaffMemberManager()
