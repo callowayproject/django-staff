@@ -5,8 +5,9 @@ from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 from django.template.defaultfilters import slugify
 from django.conf import settings
+from django.core.files.storage import get_storage_class
 
-DEFAULT_STORAGE = getattr(settings, "STAFF_PHOTO_STORAGE", settings.DEFAULT_FILE_STORAGE)
+DEFAULT_STORAGE = get_storage_class(getattr(settings, "STAFF_PHOTO_STORAGE", settings.DEFAULT_FILE_STORAGE))
 
 
 class StaffMemberManager(models.Manager):
