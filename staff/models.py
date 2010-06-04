@@ -7,6 +7,7 @@ from django.template.defaultfilters import slugify
 from django.conf import settings
 from django.core.files.storage import get_storage_class
 
+from fields import RemovableImageField
 DEFAULT_STORAGE = get_storage_class(getattr(settings, "STAFF_PHOTO_STORAGE", settings.DEFAULT_FILE_STORAGE))
 
 
@@ -39,7 +40,7 @@ class StaffMember(models.Model):
     bio = models.TextField(_('Biography'), blank=True)
     is_active = models.BooleanField(_('is a current employee'), default=True)
     phone = PhoneNumberField(_('Phone Number'), blank=True)
-    photo = models.FileField(_('Photo'), blank=True, upload_to='img/staff/%Y', storage=DEFAULT_STORAGE())
+    photo = RemovableImageField(_('Photo'), blank=True, upload_to='img/staff/%Y', storage=DEFAULT_STORAGE())
     sites = models.ManyToManyField(Site)
 
     objects = StaffMemberManager()
