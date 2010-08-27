@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404, render_to_response
 from django.template import RequestContext
 from django.template.loader import render_to_string
 from django.views.decorators.cache import cache_page
-from.django.utils import simplejson
+from django.utils import simplejson
 
 
 from staff.models import StaffMember
