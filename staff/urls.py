@@ -1,9 +1,9 @@
-from django.conf.urls.defaults import *
+from django.conf.urls.defaults import patterns, url
 from django.views.generic.simple import direct_to_template
 from models import StaffMember
 
-staffmember_info = {'model': StaffMember}
-queryset = StaffMember.objects.active()
+STAFFMEMBER_INFO = {'model': StaffMember}
+QUERYSET = StaffMember.objects.active()
 
 urlpatterns = patterns('staff.views',
     url(r'^$',
@@ -27,6 +27,6 @@ urlpatterns = patterns('staff.views',
 urlpatterns += patterns('',
     url(r'^(?P<slug>[^/]+)/$',
         'django.views.generic.list_detail.object_detail', 
-        {'queryset': queryset, 'template_name': 'staffmembers/details.html',},
+        {'queryset': QUERYSET, 'template_name': 'staffmembers/details.html',},
         name='staff_staffmember_detail'),
 )
