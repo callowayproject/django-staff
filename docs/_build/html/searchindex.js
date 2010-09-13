@@ -1,0 +1,1 @@
+Search.setIndex({objects:{},terms:{index:0,search:0,welcom:0,titl:[],app:0,indic:0,page:0,content:0,tabl:0,instal:[0,1],document:0,modul:0},objtypes:{},titles:["Welcome to app&#8217;s documentation!","Installation"],objnames:{},filenames:["index","installation"]})
