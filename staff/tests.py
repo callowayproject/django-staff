@@ -39,8 +39,9 @@ class StaffTest(TestCase):
         self.assertEqual(StaffMember.objects.all().count(), 1)
         self.user.is_staff = False
         self.user.save()
-        self.assertEqual(StaffMember.objects.all().count(), 1)
-        s = self.user.staffmember_set.all()[0]
+        self.assertEqual(StaffMember.objects.all().count(), 0)
+        self.assertEqual(StaffMember.objects.inactive().count(), 1)
+        s = self.user.staffmember_set.inactive()[0]
         self.assertEqual(s.is_active, False)
     
     def testUserInfoChange(self):

@@ -8,18 +8,45 @@ from django.conf import settings
 from django.core.files.storage import get_storage_class
 
 from fields import RemovableImageField
-DEFAULT_STORAGE = get_storage_class(getattr(settings, "STAFF_PHOTO_STORAGE", settings.DEFAULT_FILE_STORAGE))
+
+DS_SETTING = getattr(
+    settings, 
+    "STAFF_PHOTO_STORAGE", 
+    settings.DEFAULT_FILE_STORAGE
+)
+DEFAULT_STORAGE = get_storage_class(DS_SETTING)
 
 
 class StaffMemberManager(models.Manager):
     """
     A Manager for StaffMembers.
     """
+    def get_query_set(self):
+        """
+        Override the default query set to only include active members by 
+        default. 
+        """
+        qset = super(StaffMemberManager, self).get_query_set()
+        return qset.filter(is_active=True)
+    
     def active(self):
-        return super(StaffMemberManager, self).get_query_set().filter(is_active=True)
+        """
+        Return only the current staff members
+        """
+        return self.get_query_set()
+    
+    def inactive(self):
+        """
+        Return inactive staff members
+        """
+        qset = super(StaffMemberManager, self).get_query_set()
+        return qset.filter(is_active=False)
 
 
 class StaffMember(models.Model):
+    """
+    A User that works for the organization.
+    """
     user = models.ForeignKey(User, limit_choices_to = {'is_active':True},
         unique=True, verbose_name=_('User'))
     first_name = models.CharField(_('First Name'),
@@ -40,7 +67,10 @@ class StaffMember(models.Model):
     bio = models.TextField(_('Biography'), blank=True)
     is_active = models.BooleanField(_('is a current employee'), default=True)
     phone = PhoneNumberField(_('Phone Number'), blank=True)
-    photo = RemovableImageField(_('Photo'), blank=True, upload_to='img/staff/%Y', storage=DEFAULT_STORAGE())
+    photo = RemovableImageField(_('Photo'), 
+        blank=True, 
+        upload_to='img/staff/%Y', 
+        storage=DEFAULT_STORAGE())
     sites = models.ManyToManyField(Site)
 
     objects = StaffMemberManager()
@@ -53,9 +83,15 @@ class StaffMember(models.Model):
    
     @models.permalink
     def get_absolute_url(self):
+        """
+        The URL
+        """
         return ('staff_staffmember_detail', [self.slug])
 
     def get_full_name(self):
+        """
+        Simple method to concatenate the name
+        """
         return u'%s %s' % (self.first_name.strip(), self.last_name.strip())
 
     def save(self, force_insert=False, force_update=False, *args, **kwargs):
@@ -69,12 +105,14 @@ class StaffMember(models.Model):
         theslug = slugify(full_name)
         if not theslug.strip():
             theslug = str(self.user.pk)
-        while StaffMember.objects.filter(slug=theslug).exclude(id=self.id).count():
+        while StaffMember.objects.filter(slug=theslug).exclude(pk=self.pk).count():
             theslug = "%s_" % theslug
         if self.slug != theslug:
             self.slug = theslug
         self.slug = self.slug[:50]
-        super(StaffMember, self).save(force_insert, force_update, *args, **kwargs)
+        super(StaffMember, self).save(
+            force_insert, force_update, *args, **kwargs
+        )
 
 def update_staff_member(sender, instance, created, **kwargs):
     """
@@ -95,11 +133,15 @@ def update_staff_member(sender, instance, created, **kwargs):
             staffmember = staffmembers[0]
             if instance.first_name != staffmember.first_name:
                 staffmember.first_name = instance.first_name
-                staffmember.slug = slugify('%s %s' % (instance.first_name, instance.last_name)),
+                staffmember.slug = slugify('%s %s' % (
+                    instance.first_name, instance.last_name)
+                ),
                 must_save = True
             if instance.last_name != staffmember.last_name:
                 staffmember.last_name = instance.last_name
-                staffmember.slug = slugify('%s %s' % (instance.first_name, instance.last_name)),
+                staffmember.slug = slugify('%s %s' % (
+                    instance.first_name, instance.last_name)
+                ),
                 must_save = True
             if instance.email != staffmember.email:
                 staffmember.email = instance.email
