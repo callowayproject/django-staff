@@ -6,6 +6,7 @@ from django.shortcuts import get_object_or_404, render_to_response
 from django.template import RequestContext
 from django.template.loader import render_to_string
 from django.utils import simplejson
+from django.core.mail import EmailMessage
 
 from staff.models import StaffMember
 from staff.forms import ContactForm
@@ -54,8 +55,6 @@ def contact(request, slug, template_name='staffmembers/contact.html',
     if request.method == 'POST':
         form = ContactForm(request.POST)
         if form.is_valid():
-            from django.core.mail import send_mail
-            
             subject = render_to_string(
                 email_subject_template, 
                 {'member': member}
@@ -69,8 +68,9 @@ def contact(request, slug, template_name='staffmembers/contact.html',
                 'message': form.cleaned_data['message']}
             )
             
-            send_mail(subject, message, 
-                settings.DEFAULT_FROM_EMAIL, [member.email])
+            EmailMessage(subject, message, settings.DEFAULT_FROM_EMAIL, [member.email],
+                    headers = {'Reply-To': form.cleaned_data['email']}).send()
+            
             return HttpResponseRedirect(success_url)
     else:
         initial = {}
