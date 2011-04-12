@@ -17,7 +17,8 @@ class StaffMemberAdmin(admin.StackedInline):
     """
     # form = StaffMemberForm
     fieldsets = (
-        ('Personal Info', {'fields': ('bio', 'photo', 'is_active', 'phone',)}),
+        ('Personal Info', {'fields': ('bio', 'photo', 'twitter', 'website', 
+            'phone',)}),
         ('Responsibilities', {'fields': ('sites',)}),
     )
     filter_horizontal = ('sites',)
@@ -26,9 +27,10 @@ class StaffMemberAdmin(admin.StackedInline):
     
     def get_formset(self, request, obj=None, **kwargs):
         """
-        Return a form, if the obj is_staff, otherwise return an empty form
+        Return a form, if the obj has a staffmember object, otherwise 
+        return an empty form
         """
-        if obj is not None and obj.is_staff:
+        if obj is not None and obj.staffmember_set.all().count():
             return super(StaffMemberAdmin, self).get_formset(
                 request, 
                 obj, 

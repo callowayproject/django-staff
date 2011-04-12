@@ -21,19 +21,20 @@ class StaffMemberManager(models.Manager):
     """
     A Manager for StaffMembers.
     """
-    def get_query_set(self):
-        """
-        Override the default query set to only include active members by 
-        default. 
-        """
-        qset = super(StaffMemberManager, self).get_query_set()
-        return qset.filter(is_active=True)
+    # def get_query_set(self):
+    #     """
+    #     Override the default query set to only include active members by 
+    #     default. 
+    #     """
+    #     qset = super(StaffMemberManager, self).get_query_set()
+    #     return qset.filter(is_active=True)
     
     def active(self):
         """
         Return only the current staff members
         """
-        return self.get_query_set()
+        qset = super(StaffMemberManager, self).get_query_set()
+        return qset.filter(is_active=True)
     
     def inactive(self):
         """
@@ -70,7 +71,13 @@ class StaffMember(models.Model):
     photo = RemovableImageField(_('Photo'), 
         blank=True, 
         upload_to='img/staff/%Y', 
-        storage=DEFAULT_STORAGE())
+        storage=DEFAULT_STORAGE(),
+        height_field='photo_height',
+        width_field='photo_width')
+    photo_height = models.IntegerField(default=0, blank=True)
+    photo_width = models.IntegerField(default=0, blank=True)
+    twitter = models.CharField(_('Twitter ID'), max_length=100, blank=True)
+    website = models.URLField(_('Website'), verify_exists=False, blank=True)
     sites = models.ManyToManyField(Site)
 
     objects = StaffMemberManager()
@@ -123,31 +130,24 @@ def update_staff_member(sender, instance, created, **kwargs):
             user=instance,
             is_active=True)
         staffmember.save()
-        
         for site in Site.objects.all():
             staffmember.sites.add(site)
     elif instance.is_staff:
-        must_save = False
         staffmembers = instance.staffmember_set.all()
         if len(staffmembers):
             staffmember = staffmembers[0]
+            staffmember.is_active = True
             if instance.first_name != staffmember.first_name:
                 staffmember.first_name = instance.first_name
                 staffmember.slug = slugify('%s %s' % (
-                    instance.first_name, instance.last_name)
-                ),
-                must_save = True
+                    instance.first_name, instance.last_name))
             if instance.last_name != staffmember.last_name:
                 staffmember.last_name = instance.last_name
                 staffmember.slug = slugify('%s %s' % (
-                    instance.first_name, instance.last_name)
-                ),
-                must_save = True
+                    instance.first_name, instance.last_name))
             if instance.email != staffmember.email:
-                staffmember.email = instance.email
-                must_save = True
-            if must_save:
-                staffmember.save()
+                staffmember.email = instance.email    
+            staffmember.save()
     elif not instance.is_staff:
         # Make sure we deactivate any staff members associated with this user
         for staffmember in instance.staffmember_set.all():
