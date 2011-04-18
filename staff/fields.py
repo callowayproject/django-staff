@@ -113,10 +113,10 @@ class RemovableFileField(models.FileField):
             if os.path.exists(file_name) and not instance_mgr.filter(
                 **{filter_key: filter_val}).exclude(pk=instance_pk):
                 os.remove(file_name)
-
+    
     def get_internal_type(self):
         return 'FileField'
-
+    
     def save_form_data(self, instance, data):
         if data and data[0]: # Replace file
             self.delete_file(instance, self)
@@ -124,7 +124,7 @@ class RemovableFileField(models.FileField):
         if data and data[1]: # Delete file
             self.delete_file(instance, self)
             setattr(instance, self.name, None)
-
+    
     def formfield(self, **kwargs):
         defaults = {'form_class': RemovableFileFormField}
         defaults.update(kwargs)
@@ -134,9 +134,8 @@ class RemovableFileField(models.FileField):
         "Returns a suitable description of this field for South."
         # We'll just introspect the _actual_ field.
         from south.modelsinspector import introspector
-        field_class = self.__class__
+        field_class = "staff.fields.RemoveableFileField"
         args, kwargs = introspector(self)
-        # That's our definition!
         return (field_class, args, kwargs)
 
 
