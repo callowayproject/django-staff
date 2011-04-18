@@ -129,6 +129,15 @@ class RemovableFileField(models.FileField):
         defaults = {'form_class': RemovableFileFormField}
         defaults.update(kwargs)
         return super(RemovableFileField, self).formfield(**defaults)
+    
+    def south_field_triple(self):
+        "Returns a suitable description of this field for South."
+        # We'll just introspect the _actual_ field.
+        from south.modelsinspector import introspector
+        field_class = self.__class__
+        args, kwargs = introspector(self)
+        # That's our definition!
+        return (field_class, args, kwargs)
 
 
 class RemovableImageField(models.ImageField, RemovableFileField):
