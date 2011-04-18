@@ -21,7 +21,7 @@ class Migration(SchemaMigration):
         db.add_column('staff_staffmember', 'website', self.gf('django.db.models.fields.URLField')(default='', max_length=200, blank=True), keep_default=False)
 
         # Changing field 'StaffMember.photo'
-        db.alter_column('staff_staffmember', 'photo', self.gf(<class 'staff.fields.RemovableImageField'>)(max_length=100))
+        db.alter_column('staff_staffmember', 'photo', self.gf('staff.fields.RemovableImageField')(max_length=100))
 
 
     def backwards(self, orm):
@@ -94,7 +94,7 @@ class Migration(SchemaMigration):
             'is_active': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'last_name': ('django.db.models.fields.CharField', [], {'max_length': '150', 'null': 'True', 'blank': 'True'}),
             'phone': ('django.contrib.localflavor.us.models.PhoneNumberField', [], {'max_length': '20', 'blank': 'True'}),
-            'photo': (<class 'staff.fields.RemovableImageField'>, [], {'max_length': '100', 'blank': 'True'}),
+            'photo': ('staff.fields.RemovableImageField', [], {'max_length': '100', 'blank': 'True'}),
             'photo_height': ('django.db.models.fields.IntegerField', [], {'default': '0', 'blank': 'True'}),
             'photo_width': ('django.db.models.fields.IntegerField', [], {'default': '0', 'blank': 'True'}),
             'sites': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['sites.Site']", 'symmetrical': 'False'}),
