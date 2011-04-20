@@ -1,6 +1,7 @@
 from django import forms
 from django.conf import settings
 from django.db import models
+from django.db.models.fields.files import ImageFieldFile
 from django.utils.translation import ugettext as _
 
 import os
@@ -138,11 +139,23 @@ class RemovableFileField(models.FileField):
         args, kwargs = introspector(self)
         return (field_class, args, kwargs)
 
+class MyImageFieldFile(ImageFieldFile):
+    def _get_image_dimensions(self):
+        if not hasattr(self, '_dimensions_cache'):
+            try:
+                close = self.closed
+                self.open()
+                self._dimensions_cache = get_image_dimensions(self, close=close)
+            except IOError:
+                self._dimensions_cache = (100, 100)
+        return self._dimensions_cache
 
 class RemovableImageField(models.ImageField, RemovableFileField):
     """
     A specific form of removeable file field, but specifically for images
     """
+    attr_class = MyImageFieldFile
+    
     def formfield(self, **kwargs):
         defaults = {'form_class': RemovableImageFormField}
         defaults.update(kwargs)

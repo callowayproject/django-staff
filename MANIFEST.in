@@ -1,0 +1,7 @@
+recursive-include staff/templates *.html *.txt
+include requirements.txt
+recursive-include doc_src *.rst *.png *.css *.html *.js
+include doc_src/Makefile
+include doc_src/make.bat
+
+prune example

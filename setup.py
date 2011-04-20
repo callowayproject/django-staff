@@ -14,10 +14,8 @@ setup(name='django-staff',
       version=version,
       author='Corey Oordt',
       author_email='coordt@washingtontimes.com',
-      url='http://opensource.washingtontimes.com/projects/django-staff/',
+      url='http://github.com/washingtontimes/django-staff',
       include_package_files=True,
       packages=find_packages(),
-      classifiers=['Development Status :: 4 - Beta',
-          'Framework :: Django',
-          ],
-      )
+      classifiers=['Framework :: Django',],
+)
