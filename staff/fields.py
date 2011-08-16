@@ -3,6 +3,7 @@ from django.conf import settings
 from django.db import models
 from django.db.models.fields.files import ImageFieldFile
 from django.utils.translation import ugettext as _
+from django.core.files.images import get_image_dimensions
 
 import os
 
