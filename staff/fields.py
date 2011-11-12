@@ -136,7 +136,7 @@ class RemovableFileField(models.FileField):
         "Returns a suitable description of this field for South."
         # We'll just introspect the _actual_ field.
         from south.modelsinspector import introspector
-        field_class = "staff.fields.RemoveableFileField"
+        field_class = "staff.fields.RemovableFileField"
         args, kwargs = introspector(self)
         return (field_class, args, kwargs)
 
