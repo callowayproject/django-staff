@@ -17,8 +17,8 @@ class StaffMemberAdmin(admin.StackedInline):
     """
     # form = StaffMemberForm
     fieldsets = (
-        ('Personal Info', {'fields': ('bio', 'photo', 'twitter', 'website', 
-            'phone',)}),
+        ('Personal Info', {'fields': ('bio', 'photo', 'website', 'phone',)}),
+        ('Social Media', {'fields': ('twitter', 'facebook', 'google_plus')}),
         ('Responsibilities', {'fields': ('sites',)}),
     )
     filter_horizontal = ('sites',)
