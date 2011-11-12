@@ -77,6 +77,8 @@ class StaffMember(models.Model):
     photo_height = models.IntegerField(default=0, blank=True)
     photo_width = models.IntegerField(default=0, blank=True)
     twitter = models.CharField(_('Twitter ID'), max_length=100, blank=True)
+    facebook = models.CharField(_('Facebook Acccount'), max_length=100, blank=True)
+    google_plus = models.CharField(_('Google+ ID'), max_length=100, blank=True)
     website = models.URLField(_('Website'), verify_exists=False, blank=True)
     sites = models.ManyToManyField(Site)
 
