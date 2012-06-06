@@ -16,6 +16,12 @@ DS_SETTING = getattr(
 )
 DEFAULT_STORAGE = get_storage_class(DS_SETTING)
 
+# Enable settings to set a custom ordering besides last_name then first name
+STAFF_ORDERING = getattr(
+    settings, 
+    "STAFF_ORDERING", 
+    ('last_name', 'first_name')
+)
 
 class StaffMemberManager(models.Manager):
     """
@@ -85,7 +91,7 @@ class StaffMember(models.Model):
     objects = StaffMemberManager()
 
     class Meta:
-        ordering = ('last_name', 'first_name')
+        ordering = STAFF_ORDERING
 
     def __unicode__(self):
         return u"%s %s" % (self.first_name, self.last_name)
