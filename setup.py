@@ -1,21 +1,35 @@
-from setuptools import setup, find_packages
-import staff
 import os
+from setuptools import setup, find_packages
 
-version = staff.get_version()
 
 def read_file(filename):
-    dirname = os.path.abspath(os.path.dirname(__file__))
-    return open(os.path.join(dirname, filename)).read()
+    """Read a file into a string"""
+    path = os.path.abspath(os.path.dirname(__file__))
+    filepath = os.path.join(path, filename)
+    try:
+        return open(filepath).read()
+    except IOError:
+        return ''
+
+
+def get_readme():
+    """Return the README file contents. Supports text,rst, and markdown"""
+    for name in ('README', 'README.rst', 'README.md'):
+        if os.path.exists(name):
+            return read_file(name)
+    return ''
+
+# Use the docstring of the __init__ file to be the description
+DESC = " ".join(__import__('staff').__doc__.splitlines()).strip()
 
 setup(name='django-staff',
-      description='A basic addition to auth.User that manages additional staff info',
-      long_description=read_file('README'),
-      version=version,
+      description=DESC,
+      long_description=get_readme(),
+      version=__import__('staff').get_version().replace(' ', '-'),
       author='Corey Oordt',
       author_email='coordt@washingtontimes.com',
       url='http://github.com/washingtontimes/django-staff',
       include_package_files=True,
       packages=find_packages(),
-      classifiers=['Framework :: Django',],
+      classifiers=['Framework :: Django'],
 )
