@@ -3,13 +3,14 @@ from django.utils.translation import ugettext_lazy as _
 
 from models import StaffMember
 
+
 class StaffMemberForm(forms.ModelForm):
     """
     Basic form for entering data about the staff member. Changes the bio
     field to a tinyMCE widget if specified.
     """
     # bio = forms.CharField(widget=WIDGET)
-    
+
     class Meta:
         model = StaffMember
         exclude = ('slug', 'first_name', 'last_name')

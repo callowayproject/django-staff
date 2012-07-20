@@ -9,6 +9,7 @@ import os
 
 URL_PREFIX = getattr(settings, 'STATIC_URL', settings.MEDIA_URL)
 
+
 class DeleteCheckboxWidget(forms.CheckboxInput):
     """
     A specialzed checkbox that displays the filepath or preview and a
@@ -40,7 +41,7 @@ class DeleteCheckboxWidget(forms.CheckboxInput):
             return html
         else:
             return u''
-    
+
     def _has_changed(self, initial, data):
         return data
 
@@ -52,7 +53,7 @@ class RemovableFileFormWidget(forms.MultiWidget):
     """
     def __init__(self, is_image=False, initial=None, **kwargs):
         widgets = (forms.FileInput(), DeleteCheckboxWidget(
-            is_image=is_image, 
+            is_image=is_image,
             initial=initial)
         )
         super(RemovableFileFormWidget, self).__init__(widgets)
@@ -63,7 +64,7 @@ class RemovableFileFormWidget(forms.MultiWidget):
 
 class RemovableFileFormField(forms.MultiValueField):
     """
-    A field for forms that allows you to remove the file from the storage 
+    A field for forms that allows you to remove the file from the storage
     system within the admin
     """
     widget = RemovableFileFormWidget
@@ -72,7 +73,7 @@ class RemovableFileFormField(forms.MultiValueField):
 
     def __init__(self, *args, **kwargs):
         fields = [
-            self.field(*args, **kwargs), 
+            self.field(*args, **kwargs),
             forms.BooleanField(required=False)
         ]
         # Compatibility with form_for_instance
@@ -106,7 +107,7 @@ class RemovableFileField(models.FileField):
         if getattr(instance, self.attname):
             image = getattr(instance, '%s' % self.name)
             file_name = image.path
-            # If the file exists and no other object of this type references 
+            # If the file exists and no other object of this type references
             # it, delete it from the filesystem.
             instance_mgr = instance.__class__._default_manager
             filter_key = '%s__exact' % self.name
@@ -115,23 +116,23 @@ class RemovableFileField(models.FileField):
             if os.path.exists(file_name) and not instance_mgr.filter(
                 **{filter_key: filter_val}).exclude(pk=instance_pk):
                 os.remove(file_name)
-    
+
     def get_internal_type(self):
         return 'FileField'
-    
+
     def save_form_data(self, instance, data):
-        if data and data[0]: # Replace file
+        if data and data[0]:  # Replace file
             self.delete_file(instance, self)
             super(RemovableFileField, self).save_form_data(instance, data[0])
-        if data and data[1]: # Delete file
+        if data and data[1]:  # Delete file
             self.delete_file(instance, self)
             setattr(instance, self.name, None)
-    
+
     def formfield(self, **kwargs):
         defaults = {'form_class': RemovableFileFormField}
         defaults.update(kwargs)
         return super(RemovableFileField, self).formfield(**defaults)
-    
+
     def south_field_triple(self):
         "Returns a suitable description of this field for South."
         # We'll just introspect the _actual_ field.
@@ -139,6 +140,7 @@ class RemovableFileField(models.FileField):
         field_class = "staff.fields.RemovableFileField"
         args, kwargs = introspector(self)
         return (field_class, args, kwargs)
+
 
 class MyImageFieldFile(ImageFieldFile):
     def _get_image_dimensions(self):
@@ -151,12 +153,13 @@ class MyImageFieldFile(ImageFieldFile):
                 self._dimensions_cache = (100, 100)
         return self._dimensions_cache
 
+
 class RemovableImageField(models.ImageField, RemovableFileField):
     """
     A specific form of removeable file field, but specifically for images
     """
     attr_class = MyImageFieldFile
-    
+
     def formfield(self, **kwargs):
         defaults = {'form_class': RemovableImageFormField}
         defaults.update(kwargs)

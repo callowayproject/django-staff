@@ -10,18 +10,19 @@ from django.core.files.storage import get_storage_class
 from fields import RemovableImageField
 
 DS_SETTING = getattr(
-    settings, 
-    "STAFF_PHOTO_STORAGE", 
+    settings,
+    "STAFF_PHOTO_STORAGE",
     settings.DEFAULT_FILE_STORAGE
 )
 DEFAULT_STORAGE = get_storage_class(DS_SETTING)
 
 # Enable settings to set a custom ordering besides last_name then first name
 STAFF_ORDERING = getattr(
-    settings, 
-    "STAFF_ORDERING", 
+    settings,
+    "STAFF_ORDERING",
     ('last_name', 'first_name')
 )
+
 
 class StaffMemberManager(models.Manager):
     """
@@ -29,19 +30,19 @@ class StaffMemberManager(models.Manager):
     """
     # def get_query_set(self):
     #     """
-    #     Override the default query set to only include active members by 
-    #     default. 
+    #     Override the default query set to only include active members by
+    #     default.
     #     """
     #     qset = super(StaffMemberManager, self).get_query_set()
     #     return qset.filter(is_active=True)
-    
+
     def active(self):
         """
         Return only the current staff members
         """
         qset = super(StaffMemberManager, self).get_query_set()
         return qset.filter(is_active=True)
-    
+
     def inactive(self):
         """
         Return inactive staff members
@@ -54,38 +55,50 @@ class StaffMember(models.Model):
     """
     A User that works for the organization.
     """
-    user = models.ForeignKey(User, limit_choices_to = {'is_active':True},
+    user = models.ForeignKey(User,
+        limit_choices_to={'is_active': True},
         unique=True, verbose_name=_('User'))
     first_name = models.CharField(_('First Name'),
         max_length=150,
-        help_text=_('This field is linked to the User account and will change its value.'),
+        help_text=_("""This field is linked to the User account and will
+                    change its value."""),
         blank=True,
         null=True)
     last_name = models.CharField(_('Last Name'),
         max_length=150,
-        help_text=_('This field is linked to the User account and will change its value.'),
+        help_text=_("""This field is linked to the User account and will
+                    change its value."""),
         blank=True,
         null=True)
     slug = models.SlugField(unique=True)
     email = models.EmailField(_('e-mail'),
         blank=True,
-        help_text=_('This field is linked to the User account and will change its value.'),
+        help_text=_("""This field is linked to the User account and will
+                    change its value."""),
         null=True)
     bio = models.TextField(_('Biography'), blank=True)
     is_active = models.BooleanField(_('is a current employee'), default=True)
     phone = PhoneNumberField(_('Phone Number'), blank=True)
-    photo = RemovableImageField(_('Photo'), 
-        blank=True, 
-        upload_to='img/staff/%Y', 
+    photo = RemovableImageField(_('Photo'),
+        blank=True,
+        upload_to='img/staff/%Y',
         storage=DEFAULT_STORAGE(),
         height_field='photo_height',
         width_field='photo_width')
     photo_height = models.IntegerField(default=0, blank=True)
     photo_width = models.IntegerField(default=0, blank=True)
-    twitter = models.CharField(_('Twitter ID'), max_length=100, blank=True)
-    facebook = models.CharField(_('Facebook Acccount'), max_length=100, blank=True)
-    google_plus = models.CharField(_('Google+ ID'), max_length=100, blank=True)
-    website = models.URLField(_('Website'), verify_exists=False, blank=True)
+    twitter = models.CharField(_('Twitter ID'),
+        max_length=100,
+        blank=True)
+    facebook = models.CharField(_('Facebook Acccount'),
+        max_length=100,
+        blank=True)
+    google_plus = models.CharField(_('Google+ ID'),
+        max_length=100,
+        blank=True)
+    website = models.URLField(_('Website'),
+        verify_exists=False,
+        blank=True)
     sites = models.ManyToManyField(Site)
 
     objects = StaffMemberManager()
@@ -95,7 +108,7 @@ class StaffMember(models.Model):
 
     def __unicode__(self):
         return u"%s %s" % (self.first_name, self.last_name)
-   
+
     @models.permalink
     def get_absolute_url(self):
         """
@@ -129,6 +142,7 @@ class StaffMember(models.Model):
             force_insert, force_update, *args, **kwargs
         )
 
+
 def update_staff_member(sender, instance, created, **kwargs):
     """
     Update the Staff Member instance when a User object is changed.
@@ -154,7 +168,7 @@ def update_staff_member(sender, instance, created, **kwargs):
                 staffmember.slug = slugify('%s %s' % (
                     instance.first_name, instance.last_name))
             if instance.email != staffmember.email:
-                staffmember.email = instance.email    
+                staffmember.email = instance.email
             staffmember.save()
     elif not instance.is_staff:
         # Make sure we deactivate any staff members associated with this user

@@ -10,9 +10,10 @@ from django.forms.models import inlineformset_factory
 # from staff.forms import StaffMemberForm
 from staff.models import StaffMember
 
+
 class StaffMemberAdmin(admin.StackedInline):
     """
-    Admin form for a StaffMember that won't appear if the associated User 
+    Admin form for a StaffMember that won't appear if the associated User
     isn't actually a staff member.
     """
     # form = StaffMemberForm
@@ -24,19 +25,19 @@ class StaffMemberAdmin(admin.StackedInline):
     filter_horizontal = ('sites',)
     model = StaffMember
     max_num = 1
-    
+
     def get_formset(self, request, obj=None, **kwargs):
         """
-        Return a form, if the obj has a staffmember object, otherwise 
+        Return a form, if the obj has a staffmember object, otherwise
         return an empty form
         """
         if obj is not None and obj.staffmember_set.all().count():
             return super(StaffMemberAdmin, self).get_formset(
-                request, 
-                obj, 
+                request,
+                obj,
                 **kwargs
             )
-        
+
         defaults = {
             "exclude": None,
             "extra": 0,
@@ -44,11 +45,12 @@ class StaffMemberAdmin(admin.StackedInline):
         }
         return inlineformset_factory(self.parent_model, self.model, **defaults)
 
+
 class StaffUserAdmin(UserAdmin):
     """
     Subclasses the UserAdmin to add the staffmember as an inline.
     """
-    inlines = [StaffMemberAdmin,]
+    inlines = [StaffMemberAdmin, ]
 
 admin.site.unregister(User)
 admin.site.register(User, StaffUserAdmin)
