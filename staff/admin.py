@@ -1,7 +1,7 @@
 """
 Admin classes for the StaffMember model
 """
-
+import django
 from django.contrib import admin
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
@@ -10,6 +10,11 @@ from django.forms.models import inlineformset_factory
 # from staff.forms import StaffMemberForm
 from staff.models import StaffMember
 
+if django.VERSION[1] == 3:
+    ADMIN_TEMPLATE = "admin/edit_inline/staff13.html"
+else:
+    ADMIN_TEMPLATE = "admin/edit_inline/staff.html"
+
 
 class StaffMemberAdmin(admin.StackedInline):
     """
@@ -17,6 +22,7 @@ class StaffMemberAdmin(admin.StackedInline):
     isn't actually a staff member.
     """
     # form = StaffMemberForm
+    template = ADMIN_TEMPLATE
     fieldsets = (
         ('Personal Info', {'fields': ('bio', 'photo', 'website', 'phone',)}),
         ('Social Media', {'fields': ('twitter', 'facebook', 'google_plus')}),
