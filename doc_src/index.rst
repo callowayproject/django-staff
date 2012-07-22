@@ -21,6 +21,7 @@ Contents
    :glob:
 
    getting_started
+   customizing_staffmember
    reference/index
 
 

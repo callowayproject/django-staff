@@ -2,17 +2,20 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
+
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Staff Model Reference &mdash; staff v0.1 documentation</title>
+    <title>Staff Model Reference &mdash; django-staff 1.0 documentation</title>
+    
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.1',
+        VERSION:     '1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -21,13 +24,13 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="staff v0.1 documentation" href="../index.html" />
+    <link rel="top" title="django-staff 1.0 documentation" href="../index.html" />
     <link rel="up" title="Reference" href="index.html" />
     <link rel="prev" title="Settings" href="settings.html" /> 
   </head>
   <body>
 <div id="docstitle">
-	<p>staff v0.1 documentation</p>
+	<p>django-staff 1.0 documentation</p>
 </div>
 <div id="header">
 	<div id="title"><h1>Staff Model Reference</h1></div>
@@ -45,6 +48,7 @@
 	<ul><li class="toctree-l1"><a href="../index.html">Main Page</a></li></ul>
 	<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../customizing_staffmember.html">Customizing StaffMember</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Reference</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="settings.html">Settings</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="">Staff Model Reference</a></li>
@@ -131,8 +135,8 @@
 <dl class="attribute">
 <dt id="StaffMember.is_active">
 <tt class="descname">is_active</tt><a class="headerlink" href="#StaffMember.is_active" title="Permalink to this definition">¶</a></dt>
-<dd><p><strong>Required</strong> <tt class="docutils literal"><span class="pre">BooleanField</span></tt> <em>Default:</em> <tt class="xref docutils literal"><span class="pre">True</span></tt></p>
-<p><tt class="xref docutils literal"><span class="pre">True</span></tt> indicates a current staff member. <tt class="xref docutils literal"><span class="pre">False</span></tt> indicates a former staff member.</p>
+<dd><p><strong>Required</strong> <tt class="docutils literal"><span class="pre">BooleanField</span></tt> <em>Default:</em> <tt class="docutils literal"><span class="pre">True</span></tt></p>
+<p><tt class="docutils literal"><span class="pre">True</span></tt> indicates a current staff member. <tt class="docutils literal"><span class="pre">False</span></tt> indicates a former staff member.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -206,7 +210,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><cite>unicode</cite></td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><cite>unicode</cite></td>
 </tr>
 </tbody>
 </table>
@@ -223,8 +227,8 @@
       </div>
     <div class="footer">
     <p>
-      &copy; Copyright 2009, me.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+      &copy; Copyright 2012, Calloway Open Source Development.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
 	</p>
     </div>
       <div class="clearer"></div>
