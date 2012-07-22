@@ -37,7 +37,7 @@ class StaffMemberAdmin(admin.StackedInline):
         Return a form, if the obj has a staffmember object, otherwise
         return an empty form
         """
-        if obj is not None and obj.staffmember_set.all().count():
+        if obj is not None and self.model.objects.filter(user=obj).count():
             return super(StaffMemberAdmin, self).get_formset(
                 request,
                 obj,

@@ -31,7 +31,7 @@ class StaffMemberManager(models.Manager):
         return qset.filter(is_active=False)
 
 
-class StaffMember(models.Model):
+class BaseStaffMember(models.Model):
     """
     A User that works for the organization.
     """
@@ -85,6 +85,7 @@ class StaffMember(models.Model):
 
     class Meta:
         ordering = ORDERING
+        abstract = True
 
     def __unicode__(self):
         return u"%s %s" % (self.first_name, self.last_name)
@@ -118,45 +119,63 @@ class StaffMember(models.Model):
         if self.slug != theslug:
             self.slug = theslug
         self.slug = self.slug[:50]
-        super(StaffMember, self).save(
+        super(BaseStaffMember, self).save(
             force_insert, force_update, *args, **kwargs
         )
 
 
-def update_staff_member(sender, instance, created, **kwargs):
-    """
-    Update the Staff Member instance when a User object is changed.
-    """
-    if instance.is_staff and not instance.staffmember_set.count():
-        staffmember = StaffMember(
-            user=instance,
-            is_active=True)
-        staffmember.save()
-        for site in Site.objects.all():
-            staffmember.sites.add(site)
-    elif instance.is_staff:
-        staffmembers = instance.staffmember_set.all()
-        if len(staffmembers):
-            staffmember = staffmembers[0]
-            staffmember.is_active = True
-            if instance.first_name != staffmember.first_name:
-                staffmember.first_name = instance.first_name
-                staffmember.slug = slugify('%s %s' % (
-                    instance.first_name, instance.last_name))
-            if instance.last_name != staffmember.last_name:
-                staffmember.last_name = instance.last_name
-                staffmember.slug = slugify('%s %s' % (
-                    instance.first_name, instance.last_name))
-            if instance.email != staffmember.email:
-                staffmember.email = instance.email
-            staffmember.save()
-    elif not instance.is_staff:
-        # Make sure we deactivate any staff members associated with this user
-        for staffmember in instance.staffmember_set.all():
-            staffmember.is_active = False
-            staffmember.save()
-    from django.db import transaction
-    transaction.commit_unless_managed()
+class StaffMember(BaseStaffMember):
+    pass
 
-from django.db.models.signals import post_save
-post_save.connect(update_staff_member, sender=User)
+
+def get_staff_updater(cls):
+    """
+    This returns a function for passing to a signal.
+    """
+    from django.core.exceptions import ImproperlyConfigured
+    if not issubclass(cls, BaseStaffMember):
+        raise ImproperlyConfigured("%s is not a sublass of StaffMember" % cls)
+
+    def update_staff_member(sender, instance, created, *args, **kwargs):
+        """
+        Update the Staff Member instance when a User object is changed.
+        """
+        if instance.is_staff and not cls.objects.filter(user=instance).count():
+            staffmember = cls(
+                user=instance,
+                is_active=True)
+            staffmember.save()
+            for site in Site.objects.all():
+                staffmember.sites.add(site)
+        elif instance.is_staff:
+            staffmembers = cls.objects.filter(user=instance)
+            if len(staffmembers):
+                staffmember = staffmembers[0]
+                staffmember.is_active = True
+                if instance.first_name != staffmember.first_name:
+                    staffmember.first_name = instance.first_name
+                    staffmember.slug = slugify('%s %s' % (
+                        instance.first_name, instance.last_name))
+                if instance.last_name != staffmember.last_name:
+                    staffmember.last_name = instance.last_name
+                    staffmember.slug = slugify('%s %s' % (
+                        instance.first_name, instance.last_name))
+                if instance.email != staffmember.email:
+                    staffmember.email = instance.email
+                staffmember.save()
+        elif not instance.is_staff:
+            # Make sure we deactivate any staff members associated with this user
+            for staffmember in cls.objects.filter(user=instance):
+                staffmember.is_active = False
+                staffmember.save()
+        from django.db import transaction
+        transaction.commit_unless_managed()
+
+    return update_staff_member
+
+from django.conf import settings
+
+if 'staff' in settings.INSTALLED_APPS:
+    from django.db.models.signals import post_save
+    update_staff_member = get_staff_updater(StaffMember)
+    post_save.connect(update_staff_member, sender=User)
