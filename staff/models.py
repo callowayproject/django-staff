@@ -4,38 +4,18 @@ from django.contrib.localflavor.us.models import PhoneNumberField
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 from django.template.defaultfilters import slugify
-from django.conf import settings
 from django.core.files.storage import get_storage_class
 
 from fields import RemovableImageField
+from .settings import PHOTO_STORAGE, ORDERING
 
-DS_SETTING = getattr(
-    settings,
-    "STAFF_PHOTO_STORAGE",
-    settings.DEFAULT_FILE_STORAGE
-)
-DEFAULT_STORAGE = get_storage_class(DS_SETTING)
-
-# Enable settings to set a custom ordering besides last_name then first name
-STAFF_ORDERING = getattr(
-    settings,
-    "STAFF_ORDERING",
-    ('last_name', 'first_name')
-)
+DEFAULT_STORAGE = get_storage_class(PHOTO_STORAGE)
 
 
 class StaffMemberManager(models.Manager):
     """
     A Manager for StaffMembers.
     """
-    # def get_query_set(self):
-    #     """
-    #     Override the default query set to only include active members by
-    #     default.
-    #     """
-    #     qset = super(StaffMemberManager, self).get_query_set()
-    #     return qset.filter(is_active=True)
-
     def active(self):
         """
         Return only the current staff members
@@ -104,7 +84,7 @@ class StaffMember(models.Model):
     objects = StaffMemberManager()
 
     class Meta:
-        ordering = STAFF_ORDERING
+        ordering = ORDERING
 
     def __unicode__(self):
         return u"%s %s" % (self.first_name, self.last_name)
@@ -133,7 +113,7 @@ class StaffMember(models.Model):
         theslug = slugify(full_name)
         if not theslug.strip():
             theslug = str(self.user.pk)
-        while StaffMember.objects.filter(slug=theslug).exclude(pk=self.pk).count():
+        while self.__class__.objects.filter(slug=theslug).exclude(pk=self.pk).count():
             theslug = "%s_" % theslug
         if self.slug != theslug:
             self.slug = theslug
