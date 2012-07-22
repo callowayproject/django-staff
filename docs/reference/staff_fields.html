@@ -1,0 +1,239 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Staff Model Reference &mdash; staff v0.1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="staff v0.1 documentation" href="../index.html" />
+    <link rel="up" title="Reference" href="index.html" />
+    <link rel="prev" title="Settings" href="settings.html" /> 
+  </head>
+  <body>
+<div id="docstitle">
+	<p>staff v0.1 documentation</p>
+</div>
+<div id="header">
+	<div id="title"><h1>Staff Model Reference</h1></div>
+	<ul id="headerButtons">
+		<li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+		<li id="page_buttons">
+			<div class="headerButton"><a href="../genindex.html" title="General Index" accesskey="I">index</a></div>
+			<div class="headerButton"><a href="settings.html" title="Settings" accesskey="P">previous</a></div>
+		</li>
+	</ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+	<ul><li class="toctree-l1"><a href="../index.html">Main Page</a></li></ul>
+	<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="settings.html">Settings</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Staff Model Reference</a></li>
+</ul>
+</li>
+</ul>
+
+    <div id="searchbox" style="display: none">
+      
+        <form class="search" action="../search.html" method="get">
+			<div class="search-wrapper">
+			<span class="search-left"></span>
+			<input class="prettysearch" type="text" name="q" size="18" />
+			<span class="search-right">&nbsp;</span>
+			</div>
+          <input type="submit" value="Search" class="searchbutton" />
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+        <p class="searchtip" style="font-size: 90%">
+        Enter search terms or a module, class or function name.
+        </p>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="staff-model-reference">
+<h1>Staff Model Reference<a class="headerlink" href="#staff-model-reference" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="staffmember">
+<h2>StaffMember<a class="headerlink" href="#staffmember" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="StaffMember">
+<em class="property">class </em><tt class="descname">StaffMember</tt><a class="headerlink" href="#StaffMember" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="attribute">
+<dt id="StaffMember.user">
+<tt class="descname">user</tt><a class="headerlink" href="#StaffMember.user" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Required</strong> <tt class="xref py py-class docutils literal"><span class="pre">ForeignKey</span></tt> <tt class="xref py py-class docutils literal"><span class="pre">User</span></tt></p>
+<p>The <tt class="xref py py-class docutils literal"><span class="pre">User</span></tt> to which this profile relates. Choices are limited to active users.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="StaffMember.first_name">
+<tt class="descname">first_name</tt><a class="headerlink" href="#StaffMember.first_name" title="Permalink to this definition">¶</a></dt>
+<dd><p><tt class="docutils literal"><span class="pre">CharField(150)</span></tt></p>
+<p>The first name of the user. It is automatically synced with the user object and is provided in this model for convenience.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="StaffMember.last_name">
+<tt class="descname">last_name</tt><a class="headerlink" href="#StaffMember.last_name" title="Permalink to this definition">¶</a></dt>
+<dd><p><tt class="docutils literal"><span class="pre">CharField(150)</span></tt></p>
+<p>The last name of the user. It is automatically synced with the user object and is provided in this model for convenience.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="StaffMember.slug">
+<tt class="descname">slug</tt><a class="headerlink" href="#StaffMember.slug" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Required</strong> <tt class="docutils literal"><span class="pre">SlugField</span></tt></p>
+<p>A URL-friendly version of the first and last name.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="StaffMember.email">
+<tt class="descname">email</tt><a class="headerlink" href="#StaffMember.email" title="Permalink to this definition">¶</a></dt>
+<dd><p><tt class="docutils literal"><span class="pre">EmailField</span></tt></p>
+<p>The email address of the user. It is automatically synced with the user object and is provided in this model for convenience.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="StaffMember.bio">
+<tt class="descname">bio</tt><a class="headerlink" href="#StaffMember.bio" title="Permalink to this definition">¶</a></dt>
+<dd><p><tt class="docutils literal"><span class="pre">TextField</span></tt></p>
+<p>An in-depth, riveting account of the user&#8217;s life.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="StaffMember.is_active">
+<tt class="descname">is_active</tt><a class="headerlink" href="#StaffMember.is_active" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Required</strong> <tt class="docutils literal"><span class="pre">BooleanField</span></tt> <em>Default:</em> <tt class="xref docutils literal"><span class="pre">True</span></tt></p>
+<p><tt class="xref docutils literal"><span class="pre">True</span></tt> indicates a current staff member. <tt class="xref docutils literal"><span class="pre">False</span></tt> indicates a former staff member.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="StaffMember.phone">
+<tt class="descname">phone</tt><a class="headerlink" href="#StaffMember.phone" title="Permalink to this definition">¶</a></dt>
+<dd><p><tt class="docutils literal"><span class="pre">PhoneNumberField</span></tt></p>
+<p>A series of digits which, when typed into telephonic devices, might establish a vocal connection to the user.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="StaffMember.photo">
+<tt class="descname">photo</tt><a class="headerlink" href="#StaffMember.photo" title="Permalink to this definition">¶</a></dt>
+<dd><p><tt class="docutils literal"><span class="pre">RemovableImageField</span></tt></p>
+<p>A visual, digital representation of the user. The image is stored based on the <a class="reference internal" href="settings.html#photo-storage-setting"><em>PHOTO_STORAGE</em></a> setting.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="StaffMember.photo_height">
+<tt class="descname">photo_height</tt><a class="headerlink" href="#StaffMember.photo_height" title="Permalink to this definition">¶</a></dt>
+<dd><p><tt class="docutils literal"><span class="pre">IntegerField</span></tt></p>
+<p>An automatically-managed reference to the height of the uploaded photo.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="StaffMember.photo_width">
+<tt class="descname">photo_width</tt><a class="headerlink" href="#StaffMember.photo_width" title="Permalink to this definition">¶</a></dt>
+<dd><p><tt class="docutils literal"><span class="pre">IntegerField</span></tt></p>
+<p>An automatically-managed reference to the width of the uploaded photo.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="StaffMember.twitter">
+<tt class="descname">twitter</tt><a class="headerlink" href="#StaffMember.twitter" title="Permalink to this definition">¶</a></dt>
+<dd><p><tt class="docutils literal"><span class="pre">CharField(100)</span></tt></p>
+<p>The staff member&#8217;s Twitter ID</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="StaffMember.facebook">
+<tt class="descname">facebook</tt><a class="headerlink" href="#StaffMember.facebook" title="Permalink to this definition">¶</a></dt>
+<dd><p><tt class="docutils literal"><span class="pre">CharField(100)</span></tt></p>
+<p>The staff member&#8217;s Facebook ID</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="StaffMember.google_plus">
+<tt class="descname">google_plus</tt><a class="headerlink" href="#StaffMember.google_plus" title="Permalink to this definition">¶</a></dt>
+<dd><p><tt class="docutils literal"><span class="pre">CharField(100)</span></tt></p>
+<p>The staff member&#8217;s Google Plus account</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="StaffMember.website">
+<tt class="descname">website</tt><a class="headerlink" href="#StaffMember.website" title="Permalink to this definition">¶</a></dt>
+<dd><p><tt class="docutils literal"><span class="pre">URLField</span></tt></p>
+<p>A custom web site for the staff member.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="StaffMember.sites">
+<tt class="descname">sites</tt><a class="headerlink" href="#StaffMember.sites" title="Permalink to this definition">¶</a></dt>
+<dd><p><tt class="docutils literal"><span class="pre">ManyToManyField</span></tt> <tt class="xref py py-class docutils literal"><span class="pre">Site</span></tt></p>
+<p>The sites that the staff member works on.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="StaffMember.get_full_name">
+<tt class="descname">get_full_name</tt><big>(</big><big>)</big><a class="headerlink" href="#StaffMember.get_full_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>A convenient way to concatenate the first and last name.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><cite>unicode</cite></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2009, me.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+	</p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+	<div id="breadcrumbs">
+		<a href="index.html" accesskey="U">Reference</a><img src="../_static/triangle_closed.png" height="9" width="9" alt="&gt;">
+		Staff Model Reference
+		</ul>
+	</div>
+	<script type="text/javascript" charset="utf-8" src="../_static/toc.js"></script>
+  </body>
+</html>
