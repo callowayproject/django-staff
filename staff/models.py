@@ -77,7 +77,6 @@ class BaseStaffMember(models.Model):
         max_length=100,
         blank=True)
     website = models.URLField(_('Website'),
-        verify_exists=False,
         blank=True)
     sites = models.ManyToManyField(Site)
 

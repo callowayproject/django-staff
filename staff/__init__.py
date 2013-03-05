@@ -4,9 +4,9 @@ A basic addition to auth.User that manages additional staff info
 
 __version_info__ = {
     'major': 1,
-    'minor': 0,
+    'minor': 1,
     'micro': 0,
-    'releaselevel': 'final',
+    'releaselevel': 'beta',
     'serial': 1
 }
 
