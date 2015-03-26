@@ -30,6 +30,7 @@ setup(name='django-staff',
       author_email='webmaster@callowayproject.com',
       url='https://github.com/callowayproject/django-staff',
       include_package_data=True,
+      install_requires=read_file('requirements.txt'),
       packages=find_packages(),
       classifiers=['Framework :: Django'],
 )
