@@ -20,14 +20,14 @@ class StaffMemberManager(models.Manager):
         """
         Return only the current staff members
         """
-        qset = super(StaffMemberManager, self).get_query_set()
+        qset = super(StaffMemberManager, self).get_queryset()
         return qset.filter(is_active=True)
 
     def inactive(self):
         """
         Return inactive staff members
         """
-        qset = super(StaffMemberManager, self).get_query_set()
+        qset = super(StaffMemberManager, self).get_queryset()
         return qset.filter(is_active=False)
 
 
