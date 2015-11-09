@@ -9,7 +9,7 @@ from django.forms.models import inlineformset_factory
 # from staff.forms import StaffMemberForm
 from staff.models import StaffMember
 
-ADMIN_TEMPLATE = "admin/edit_inline/staff.html"
+# ADMIN_TEMPLATE = "admin/edit_inline/staff.html"
 
 
 class StaffMemberAdmin(admin.StackedInline):
@@ -18,7 +18,7 @@ class StaffMemberAdmin(admin.StackedInline):
     isn't actually a staff member.
     """
     # form = StaffMemberForm
-    template = ADMIN_TEMPLATE
+    # template = ADMIN_TEMPLATE
     fieldsets = (
         ('Personal Info', {'fields': ('bio', 'photo', 'website', 'phone',)}),
         ('Social Media', {'fields': ('twitter', 'facebook', 'google_plus')}),
