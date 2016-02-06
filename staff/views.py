@@ -5,7 +5,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render_to_response
 from django.template import RequestContext
 from django.template.loader import render_to_string
-from django.utils import simplejson
+import json
 from django.core.mail import EmailMessage
 
 from staff.models import StaffMember
@@ -42,14 +42,14 @@ def userinfo_json(request, user_id):
     except StaffMember.DoesNotExist:
         pass
 
-    return HttpResponse(simplejson.dumps(data),
+    return HttpResponse(json.dumps(data),
                         mimetype='application/json')
 
 
 def contact(request, slug, template_name='staffmembers/contact.html',
-    success_url='/staff/contact/done/',
-    email_subject_template='staffmembers/emails/subject.txt',
-    email_body_template='staffmembers/emails/body.txt'):
+            success_url='/staff/contact/done/',
+            email_subject_template='staffmembers/emails/subject.txt',
+            email_body_template='staffmembers/emails/body.txt'):
     """
     Handle a contact request
     """
@@ -74,21 +74,22 @@ def contact(request, slug, template_name='staffmembers/contact.html',
             EmailMessage(subject, message, settings.DEFAULT_FROM_EMAIL,
                 [member.email], headers={
                     'Reply-To': form.cleaned_data['email']
-            }).send()
+                }).send()
 
             return HttpResponseRedirect(success_url)
     else:
         initial = {}
         if not request.user.is_anonymous():
-            initial = {'name': '%s %s' % (
-                            request.user.first_name, request.user.last_name),
-                       'email': request.user.email}
+            initial = {'name': '%s %s' % (request.user.first_name,
+                                          request.user.last_name),
+                        'email': request.user.email}
         form = ContactForm(initial=initial)
 
     return render_to_response(template_name,
                               {'form': form,
                                'member': member},
                               context_instance=RequestContext(request))
+
 
 # TODO: This needs to be refactored so that any other model can be referenced
 def story_archive(request, slug, template_name='staffmembers/story_archive.html'):

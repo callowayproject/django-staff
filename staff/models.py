@@ -1,12 +1,13 @@
-from django.db import models
-from django.utils.translation import ugettext_lazy as _
-from django_localflavor_us.models import PhoneNumberField
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
-from django.template.defaultfilters import slugify
 from django.core.files.storage import get_storage_class
+from django.db import models
+from django.template.defaultfilters import slugify
+from django.utils.translation import ugettext_lazy as _
+from django_localflavor_us.models import PhoneNumberField
 
-from fields import RemovableImageField
+from .fields import RemovableImageField
 from .settings import PHOTO_STORAGE, ORDERING
 
 DEFAULT_STORAGE = get_storage_class(PHOTO_STORAGE)
@@ -20,14 +21,14 @@ class StaffMemberManager(models.Manager):
         """
         Return only the current staff members
         """
-        qset = super(StaffMemberManager, self).get_query_set()
+        qset = super(StaffMemberManager, self).get_queryset()
         return qset.filter(is_active=True)
 
     def inactive(self):
         """
         Return inactive staff members
         """
-        qset = super(StaffMemberManager, self).get_query_set()
+        qset = super(StaffMemberManager, self).get_queryset()
         return qset.filter(is_active=False)
 
 
@@ -56,6 +57,11 @@ class BaseStaffMember(models.Model):
         help_text=_("""This field is linked to the User account and will
                     change its value."""),
         null=True)
+    title = models.CharField(
+        _('Title'),
+        max_length=50,
+        blank=True,
+        default="")
     bio = models.TextField(_('Biography'), blank=True)
     is_active = models.BooleanField(_('is a current employee'), default=True)
     phone = PhoneNumberField(_('Phone Number'), blank=True)
@@ -78,7 +84,6 @@ class BaseStaffMember(models.Model):
         blank=True)
     website = models.URLField(_('Website'),
         blank=True)
-    sites = models.ManyToManyField(Site)
 
     objects = StaffMemberManager()
 
@@ -144,8 +149,6 @@ def get_staff_updater(cls):
                 user=instance,
                 is_active=True)
             staffmember.save()
-            for site in Site.objects.all():
-                staffmember.sites.add(site)
         elif instance.is_staff:
             staffmembers = cls.objects.filter(user=instance)
             if len(staffmembers):
@@ -171,8 +174,6 @@ def get_staff_updater(cls):
         transaction.commit_unless_managed()
 
     return update_staff_member
-
-from django.conf import settings
 
 if 'staff' in settings.INSTALLED_APPS:
     from django.db.models.signals import post_save

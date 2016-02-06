@@ -4,4 +4,4 @@ recursive-include doc_src *.rst *.png *.css *.html *.js
 include doc_src/Makefile
 include doc_src/make.bat
 
-prune example
+prune example/
