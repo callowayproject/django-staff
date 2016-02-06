@@ -20,11 +20,9 @@ class StaffMemberAdmin(admin.StackedInline):
     # form = StaffMemberForm
     # template = ADMIN_TEMPLATE
     fieldsets = (
-        ('Personal Info', {'fields': ('bio', 'photo', 'website', 'phone',)}),
+        ('Personal Info', {'fields': ('title', 'bio', 'photo', 'website', 'phone',)}),
         ('Social Media', {'fields': ('twitter', 'facebook', 'google_plus')}),
-        ('Responsibilities', {'fields': ('sites',)}),
     )
-    filter_horizontal = ('sites',)
     model = StaffMember
     max_num = 1
 
